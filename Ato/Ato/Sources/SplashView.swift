@@ -13,7 +13,8 @@ struct SplashView: View {
             Image(systemName: "globe")
                 .imageScale(.large)
                 .foregroundStyle(.tint)
-            Text("Hello, world!")
+            Text("안녕하세요")
+                .font(.ato(.regular, 20))
         }
         .padding()
     }
