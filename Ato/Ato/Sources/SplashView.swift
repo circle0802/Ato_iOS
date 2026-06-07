@@ -19,7 +19,10 @@ struct SplashView: View {
                 .foregroundStyle(Color.gray100)
         }
         Spacer()
-        Button(action: {}) {
+        NavigationLink {
+            LoginView()
+                .navigationBarBackButtonHidden(true)
+        } label: {
             Text("선물고르러 가기")
                 .font(.ato(.semiBold, 16))
                 .foregroundStyle(Color.orange400)
@@ -30,6 +33,7 @@ struct SplashView: View {
         }
         .padding(.horizontal, 32)
         .padding(.bottom, 32)
+        .navigationBarBackButtonHidden(true)
     }
 }
 

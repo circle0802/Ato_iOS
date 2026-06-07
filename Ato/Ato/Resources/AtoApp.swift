@@ -11,7 +11,9 @@ import SwiftUI
 struct AtoApp: App {
     var body: some Scene {
         WindowGroup {
-            SplashView()
+            NavigationStack {
+                SplashView()
+            }
         }
     }
 }
