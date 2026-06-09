@@ -1,0 +1,9 @@
+.DS_Store
+.build/
+DerivedData/
+Ato/Config/Local.xcconfig
+
+.DS_Store
+._.DS_Store
+**/.DS_Store
+**/._.DS_Store

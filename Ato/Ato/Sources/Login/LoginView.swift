@@ -7,12 +7,7 @@
 import SwiftUI
 
 struct LoginView: View {
-    @State private var nickname = ""
-    @State private var password = ""
-
-    private var isLoginEnabled: Bool {
-        !nickname.isEmpty && !password.isEmpty
-    }
+    @StateObject private var viewModel = LoginViewModel()
 
     var body: some View {
         VStack(spacing: 36) {
@@ -31,17 +26,28 @@ struct LoginView: View {
             AtoTextField(
                 title: "별명",
                 placeholder: "별명을 입력해주세요",
-                text: $nickname
+                text: $viewModel.nickname
             )
 
             AtoTextField(
                 title: "비밀번호",
                 placeholder: "비밀번호를 입력해주세요",
-                text: $password,
+                text: $viewModel.password,
                 isSecure: true
             )
 
-            AtoButton("로그인", isEnabled: isLoginEnabled) {}
+            if let errorMessage = viewModel.errorMessage {
+                Text(errorMessage)
+                    .font(.ato(.regular, 14))
+                    .foregroundStyle(Color.red)
+            }
+
+            AtoButton(
+                viewModel.isLoading ? "로그인 중..." : "로그인",
+                isEnabled: viewModel.isLoginEnabled
+            ) {
+                viewModel.login()
+            }
 
             NavigationLink {
                 SignupView()
