@@ -77,7 +77,9 @@ final class SignupViewModel: ObservableObject {
 
         Task {
             do {
-                authResponse = try await authService.signup(nickname: nickname, password: password)
+                let response = try await authService.signup(nickname: nickname, password: password)
+                AuthSession.save(response)
+                authResponse = response
                 didSignup = true
             } catch {
                 errorMessage = error.localizedDescription

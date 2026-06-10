@@ -8,6 +8,7 @@ import SwiftUI
 
 struct LoginView: View {
     @StateObject private var viewModel = LoginViewModel()
+    @State private var isShowingMain = false
 
     var body: some View {
         VStack(spacing: 36) {
@@ -64,6 +65,12 @@ struct LoginView: View {
         .padding(.horizontal, 32)
         .background(Color.gray50)
         .navigationBarBackButtonHidden(true)
+        .navigationDestination(isPresented: $isShowingMain) {
+            MainTabView()
+        }
+        .onChange(of: viewModel.authResponse != nil) { _, isLoggedIn in
+            isShowingMain = isLoggedIn
+        }
     }
 }
 
