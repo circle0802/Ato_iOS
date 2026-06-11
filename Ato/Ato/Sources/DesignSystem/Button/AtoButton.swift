@@ -10,27 +10,43 @@ import SwiftUI
 struct AtoButton: View {
     let title: String
     let isEnabled: Bool
+    let systemImageName: String?
+    let height: CGFloat
+    let fontSize: CGFloat
     let action: () -> Void
 
     init(
         _ title: String,
         isEnabled: Bool = true,
+        systemImageName: String? = nil,
+        height: CGFloat = 56,
+        fontSize: CGFloat = 20,
         action: @escaping () -> Void
     ) {
         self.title = title
         self.isEnabled = isEnabled
+        self.systemImageName = systemImageName
+        self.height = height
+        self.fontSize = fontSize
         self.action = action
     }
 
     var body: some View {
         Button(action: action) {
-            Text(title)
-                .font(.ato(.semiBold, 20))
-                .foregroundStyle(.white)
-                .frame(height: 56)
-                .frame(maxWidth: .infinity)
-                .background(isEnabled ? Color.orange400 : Color.gray200)
-                .clipShape(RoundedRectangle(cornerRadius: 32))
+            HStack(spacing: 8) {
+                if let systemImageName {
+                    Image(systemName: systemImageName)
+                        .font(.system(size: fontSize - 2, weight: .semibold))
+                }
+
+                Text(title)
+                    .font(.ato(.semiBold, fontSize))
+            }
+            .foregroundStyle(.white)
+            .frame(height: height)
+            .frame(maxWidth: .infinity)
+            .background(isEnabled ? Color.orange400 : Color.gray200)
+            .clipShape(RoundedRectangle(cornerRadius: height / 2))
         }
         .disabled(!isEnabled)
     }

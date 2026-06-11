@@ -15,6 +15,10 @@ struct AnniversaryDetailResponse: Decodable {
     let anniversary: AnniversaryDTO
 }
 
+struct NearestAnniversaryResponse: Decodable {
+    let anniversary: AnniversaryDTO?
+}
+
 struct AnniversaryRequest: Sendable {
     let title: String
     let targetName: String

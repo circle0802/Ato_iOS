@@ -12,17 +12,20 @@ struct AtoTextField: View {
     let placeholder: String
     @Binding var text: String
     let isSecure: Bool
+    let keyboardType: UIKeyboardType
 
     init(
         title: String,
         placeholder: String,
         text: Binding<String>,
-        isSecure: Bool = false
+        isSecure: Bool = false,
+        keyboardType: UIKeyboardType = .default
     ) {
         self.title = title
         self.placeholder = placeholder
         self._text = text
         self.isSecure = isSecure
+        self.keyboardType = keyboardType
     }
 
     var body: some View {
@@ -36,6 +39,7 @@ struct AtoTextField: View {
                 .foregroundStyle(Color.gray400)
                 .textInputAutocapitalization(.never)
                 .autocorrectionDisabled()
+                .keyboardType(keyboardType)
                 .padding(.horizontal, 20)
                 .frame(height: 56)
                 .overlay {

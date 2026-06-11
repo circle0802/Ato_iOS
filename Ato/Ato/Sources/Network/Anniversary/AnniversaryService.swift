@@ -16,8 +16,8 @@ final class AnniversaryService {
         self.provider = provider
     }
 
-    func fetchNearest() async throws -> AnniversaryDTO {
-        let response = try await request(.nearest, as: AnniversaryDetailResponse.self)
+    func fetchNearest() async throws -> AnniversaryDTO? {
+        let response = try await request(.nearest, as: NearestAnniversaryResponse.self)
         return response.anniversary
     }
 

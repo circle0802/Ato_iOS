@@ -1,5 +1,5 @@
 //
-//  HomeViewModel.swift
+//  AllAnniversariesViewModel.swift
 //  Ato
 //
 //  Created by Codex on 6/10/26.
@@ -9,12 +9,17 @@ import Foundation
 import Combine
 
 @MainActor
-final class HomeViewModel: ObservableObject {
-    @Published private(set) var nickname = AuthSession.nickname
-    @Published private(set) var closestAnniversary: Anniversary?
+final class AllAnniversariesViewModel: ObservableObject {
     @Published private(set) var anniversaries: [Anniversary] = []
     @Published private(set) var isLoading = false
     @Published var errorMessage: String?
+    @Published var selectedSort: AnniversarySort = .dday {
+        didSet {
+            if oldValue != selectedSort {
+                load()
+            }
+        }
+    }
 
     private let anniversaryService: AnniversaryService
 
@@ -27,18 +32,11 @@ final class HomeViewModel: ObservableObject {
 
         isLoading = true
         errorMessage = nil
-        nickname = AuthSession.nickname
 
         Task {
             do {
-                async let nearest = anniversaryService.fetchNearest()
-                async let upcoming = anniversaryService.fetchUpcoming(limit: 5)
-
-                let nearestDTO = try await nearest
-                let upcomingDTOs = try await upcoming
-
-                closestAnniversary = nearestDTO.map(Anniversary.init(dto:))
-                anniversaries = upcomingDTOs.map(Anniversary.init(dto:))
+                let response = try await anniversaryService.fetchAnniversaries(sort: selectedSort)
+                anniversaries = response.map(Anniversary.init(dto:))
             } catch {
                 errorMessage = error.localizedDescription
             }

@@ -124,22 +124,16 @@ struct AnniversaryFormView: View {
                 .foregroundStyle(Color.gray400)
 
             HStack {
-                Button(action: {
+                AtoBackButton {
                     dismiss()
-                }) {
-                    Image(systemName: "arrow.left")
-                        .font(.system(size: 26, weight: .regular))
-                        .foregroundStyle(Color.gray400)
-                        .frame(width: 44, height: 44, alignment: .leading)
                 }
-                .buttonStyle(.plain)
 
                 Spacer()
             }
         }
         .padding(.horizontal, 25)
-        .padding(.top, 44)
-        .frame(height: 96)
+        .padding(.top, 28)
+        .frame(height: 80)
     }
 
     private var datePicker: some View {

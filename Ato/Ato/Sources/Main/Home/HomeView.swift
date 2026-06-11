@@ -10,6 +10,9 @@ import SwiftUI
 struct HomeView: View {
     @StateObject private var viewModel = HomeViewModel()
     @State private var formMode: AnniversaryFormMode?
+    @State private var isShowingAllAnniversaries = false
+    @State private var isShowingGiftRecommendation = false
+    @State private var isShowingMessageGeneration = false
 
     private let quickActions = HomeQuickAction.homeActions
 
@@ -37,7 +40,10 @@ struct HomeView: View {
 
                 AnniversaryListSection(
                     anniversaries: viewModel.anniversaries,
-                    isLoading: viewModel.isLoading
+                    isLoading: viewModel.isLoading,
+                    onSeeAll: {
+                        isShowingAllAnniversaries = true
+                    }
                 ) { anniversary in
                     formMode = .edit(anniversary)
                 }
@@ -52,6 +58,15 @@ struct HomeView: View {
         .navigationDestination(item: $formMode) { mode in
             AnniversaryFormView(mode: mode)
         }
+        .navigationDestination(isPresented: $isShowingAllAnniversaries) {
+            AllAnniversariesView()
+        }
+        .navigationDestination(isPresented: $isShowingGiftRecommendation) {
+            GiftRecommendationView()
+        }
+        .navigationDestination(isPresented: $isShowingMessageGeneration) {
+            MessageGenerationView()
+        }
         .onChange(of: formMode) { _, newValue in
             if newValue == nil {
                 viewModel.load()
@@ -63,8 +78,10 @@ struct HomeView: View {
         switch action.kind {
         case .anniversaryForm:
             formMode = .create
-        case .giftRecommendation, .messageRecommendation:
-            break
+        case .giftRecommendation:
+            isShowingGiftRecommendation = true
+        case .messageRecommendation:
+            isShowingMessageGeneration = true
         }
     }
 

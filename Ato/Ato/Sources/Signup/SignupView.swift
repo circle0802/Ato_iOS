@@ -13,17 +13,13 @@ struct SignupView: View {
     var body: some View {
         VStack(spacing: 36) {
             HStack {
-                Button(action: {
+                AtoBackButton {
                     dismiss()
-                }) {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 24, weight: .medium))
-                        .foregroundStyle(Color.gray400)
-                        .frame(width: 44, height: 44, alignment: .leading)
                 }
 
                 Spacer()
             }
+            .padding(.top, -16)
 
             VStack(spacing: 0) {
                 Text("아토")
@@ -57,7 +53,7 @@ struct SignupView: View {
                             .background(Color.orange100)
                             .clipShape(Capsule())
                     }
-                    .disabled(viewModel.nickname.isEmpty || viewModel.isCheckingNickname)
+                    .disabled(!viewModel.isNicknameCheckEnabled)
                 }
 
                 if let nicknameCheckMessage = viewModel.nicknameCheckMessage {

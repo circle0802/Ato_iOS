@@ -23,6 +23,15 @@ final class SignupViewModel: ObservableObject {
 
     private let authService: AuthService
 
+    var isNicknameFormatValid: Bool {
+        let trimmedNickname = nickname.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmedNickname.count >= 2 && Self.nicknamePattern.matches(trimmedNickname)
+    }
+
+    var isNicknameCheckEnabled: Bool {
+        isNicknameFormatValid && !isCheckingNickname
+    }
+
     var isPasswordFormatValid: Bool {
         let hasLetter = password.rangeOfCharacter(from: .letters) != nil
         let hasNumber = password.rangeOfCharacter(from: .decimalDigits) != nil
@@ -32,7 +41,7 @@ final class SignupViewModel: ObservableObject {
     }
 
     var isSignupEnabled: Bool {
-        !nickname.isEmpty
+        isNicknameFormatValid
         && isNicknameAvailable
         && isPasswordFormatValid
         && password == passwordConfirm
@@ -46,18 +55,22 @@ final class SignupViewModel: ObservableObject {
     func updateNickname(_ nickname: String) {
         self.nickname = nickname
         isNicknameAvailable = false
-        nicknameCheckMessage = nil
+        nicknameCheckMessage = validationMessage(for: nickname)
     }
 
     func checkNickname() {
-        guard !nickname.isEmpty else { return }
+        guard isNicknameFormatValid else {
+            nicknameCheckMessage = validationMessage(for: nickname)
+            isNicknameAvailable = false
+            return
+        }
 
         isCheckingNickname = true
         errorMessage = nil
 
         Task {
             do {
-                let response = try await authService.checkNickname(nickname)
+                let response = try await authService.checkNickname(nickname.trimmingCharacters(in: .whitespacesAndNewlines))
                 isNicknameAvailable = response.available
                 nicknameCheckMessage = response.available ? "사용 가능한 별명이에요." : "이미 사용 중인 별명이에요."
             } catch {
@@ -87,5 +100,34 @@ final class SignupViewModel: ObservableObject {
 
             isLoading = false
         }
+    }
+
+    private func validationMessage(for nickname: String) -> String? {
+        let trimmedNickname = nickname.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if trimmedNickname.isEmpty {
+            return nil
+        }
+
+        if trimmedNickname.count < 2 {
+            return "별명은 2글자 이상 입력해주세요."
+        }
+
+        if !Self.nicknamePattern.matches(trimmedNickname) {
+            return "별명은 한글, 영어, 숫자, _만 사용할 수 있어요."
+        }
+
+        return nil
+    }
+
+    private nonisolated static let nicknamePattern = try! NSRegularExpression(
+        pattern: "^[가-힣a-zA-Z0-9_]+$"
+    )
+}
+
+private extension NSRegularExpression {
+    func matches(_ string: String) -> Bool {
+        let range = NSRange(string.startIndex..<string.endIndex, in: string)
+        return firstMatch(in: string, range: range) != nil
     }
 }
