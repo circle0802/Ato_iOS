@@ -26,6 +26,10 @@ final class AnniversaryService {
         return response.anniversaries
     }
 
+    func fetchCalendar(year: Int, month: Int) async throws -> AnniversaryCalendarResponse {
+        try await request(.calendar(year: year, month: month), as: AnniversaryCalendarResponse.self)
+    }
+
     func fetchAnniversaries(sort: AnniversarySort = .dday) async throws -> [AnniversaryDTO] {
         let response = try await request(.list(sort: sort), as: AnniversariesResponse.self)
         return response.anniversaries

@@ -21,6 +21,10 @@ enum AuthSession {
         UserDefaults.standard.set(response.user.nickname, forKey: "auth.nickname")
     }
 
+    nonisolated static func updateNickname(_ nickname: String) {
+        UserDefaults.standard.set(nickname, forKey: "auth.nickname")
+    }
+
     nonisolated static func clear() {
         UserDefaults.standard.removeObject(forKey: "auth.token")
         UserDefaults.standard.removeObject(forKey: "auth.nickname")

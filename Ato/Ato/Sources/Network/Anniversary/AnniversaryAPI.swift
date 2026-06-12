@@ -17,6 +17,7 @@ enum AnniversarySort: String {
 enum AnniversaryAPI {
     case nearest
     case upcoming(limit: Int)
+    case calendar(year: Int, month: Int)
     case list(sort: AnniversarySort)
     case detail(id: String)
     case create(request: AnniversaryRequest)
@@ -34,6 +35,8 @@ extension AnniversaryAPI: TargetType {
             return "/api/anniversaries/nearest"
         case .upcoming:
             return "/api/anniversaries/upcoming"
+        case .calendar:
+            return "/api/anniversaries/calendar"
         case .list, .create:
             return "/api/anniversaries"
         case .detail(let id), .update(let id, _):
@@ -43,7 +46,7 @@ extension AnniversaryAPI: TargetType {
 
     nonisolated var method: Moya.Method {
         switch self {
-        case .nearest, .upcoming, .list, .detail:
+        case .nearest, .upcoming, .calendar, .list, .detail:
             return .get
         case .create:
             return .post
@@ -59,6 +62,14 @@ extension AnniversaryAPI: TargetType {
         case .upcoming(let limit):
             return .requestParameters(
                 parameters: ["limit": limit],
+                encoding: URLEncoding.queryString
+            )
+        case .calendar(let year, let month):
+            return .requestParameters(
+                parameters: [
+                    "year": year,
+                    "month": month
+                ],
                 encoding: URLEncoding.queryString
             )
         case .list(let sort):

@@ -25,31 +25,12 @@ struct MainTabView: View {
     private var content: some View {
         switch selectedTab {
         case .calendar:
-            PlaceholderTabView(title: "캘린더")
+            CalendarView()
         case .home:
             HomeView()
         case .my:
-            PlaceholderTabView(title: "마이")
+            MyPageView()
         }
-    }
-}
-
-private struct PlaceholderTabView: View {
-    let title: String
-
-    var body: some View {
-        VStack {
-            Spacer()
-
-            Text(title)
-                .font(.ato(.bold, 24))
-                .foregroundStyle(Color.gray400)
-
-            Spacer()
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.gray50)
-        .padding(.bottom, 88)
     }
 }
 
